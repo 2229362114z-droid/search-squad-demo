@@ -1,15 +1,17 @@
 /**
- * 探索运行时（P1-7/P1-8 单队版）：
- * 状态机：movement（探图）→ combat（战斗结算）→ looting（搜刮）→ extraction（撤离结算）
- * 搜刮点/奖励用 seed 确定性生成（沿用 domain/search 思路），战利品按价值入包，
- * 撤离时战利品变现铜币，军械保留；全灭则战利品清空、军械保留、带伤回城。
+ * 探索运行时（对齐公网版玩法）：
+ * - 搜索点：domain generateSearchPoints 确定性生成（品质权重、上锁宝箱、战斗道具掉落）
+ * - 恐怖值：每换房 +movementGain，满值后每房存活队员损 maxHp*fullDamageRatio（previewTerrorMove）
+ * - 铜钥匙：初始 2 把，开启上锁搜索点；商店房可补给（后续接商店）
+ * - 撤离：战利品全额变现，军械保留；全灭战利品遗失
  */
 
-import type { GameConfig } from '@/src/config/types';
-import type { DemoMap, DemoRoom, Nature } from '@/src/game/map-gen';
+import type { GameConfig, SearchRewardConfig, CombatItemConfig } from '@/src/config/types';
+import { generateSearchPoints } from '@/src/domain/search/search';
+import { previewTerrorMove, type PartyMemberHealth } from '@/src/domain/terror/terror';
+import type { DemoMap, DemoRoom } from '@/src/game/map-gen';
 import { generateDemoMap } from '@/src/game/map-gen';
 import { runBattle, type BattleOutcome } from '@/src/game/bridge';
-import type { ItemDef, RoomKey } from '@/src/game/data';
 
 export type RunPhase = 'movement' | 'looting' | 'finished';
 
@@ -17,6 +19,16 @@ export interface LootEntry {
   readonly instanceId: string;
   readonly nm: string;
   readonly value: number;
+  readonly artId: string;
+  readonly quality: string;
+}
+
+export interface SearchPointView {
+  readonly id: string;
+  readonly requiresKey: boolean;
+  readonly qualityName: string;
+  readonly qualityColor: string;
+  readonly searched: boolean;
 }
 
 export interface RunState {
@@ -25,48 +37,54 @@ export interface RunState {
   readonly currentRoomId: string;
   readonly phase: RunPhase;
   readonly visitedRooms: ReadonlySet<string>;
-  readonly lootedRooms: ReadonlySet<string>;
-  /** 军械永久保留（id → 英雄id），战利品撤离变现 */
+  readonly searchedPoints: ReadonlySet<string>;
   readonly equipped: Readonly<Record<number, number>>;
+  readonly picks: readonly number[];
   readonly loot: readonly LootEntry[];
   readonly heroHealth: Readonly<Record<number, number>>;
+  readonly terror: number;
+  readonly keys: number;
   readonly coins: number;
   readonly result: 'none' | 'extracted' | 'wiped';
   readonly log: readonly string[];
 }
 
+function seedToNumber(seed: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < seed.length; i += 1) {
+    hash ^= seed.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
 export function createRun(
+  config: GameConfig,
   seed: string,
   equipped: Readonly<Record<number, number>>,
   picks: readonly number[],
 ): RunState {
   const map = generateDemoMap(seed);
-  // 起始房按队伍序号分配（单队先占 index 0），出生满状态
   const startRoom = map.rooms.find((r) => r.kind === 'start')!;
   const heroHealth: Record<number, number> = {};
-  for (const id of picks) heroHealth[id] = -1; // -1 = 满血标记
+  for (const id of picks) heroHealth[id] = -1; // -1 = 满血
   return {
     seed,
     map,
     currentRoomId: startRoom.id,
     phase: 'movement',
     visitedRooms: new Set([startRoom.id]),
-    lootedRooms: new Set(),
+    searchedPoints: new Set(),
     equipped,
+    picks: [...picks],
     loot: [],
     heroHealth,
+    terror: 0,
+    keys: 2,
     coins: 0,
     result: 'none',
-    log: [`小队从【${startRoom.displayName}】进入墓道，恐怖在身后蔓延……`],
+    log: [`小队从【${startRoom.displayName}】进入墓道。`],
   };
-}
-
-export interface MovePreview {
-  readonly room: DemoRoom;
-  readonly encounter: 'combat' | 'elite' | 'boss' | 'treasure' | 'merchant' | 'start';
-  readonly nature: Nature;
-  readonly danger: number;
-  readonly warning: string;
 }
 
 export function neighborsOf(state: RunState): readonly DemoRoom[] {
@@ -75,149 +93,234 @@ export function neighborsOf(state: RunState): readonly DemoRoom[] {
   );
 }
 
-export function previewMove(state: RunState, room: DemoRoom): MovePreview {
-  const labels: Record<RoomKind2, string> = {
-    start: '起点',
-    combat: '战斗房',
-    elite: '精英房',
-    boss: '首领房',
-    treasure: '宝藏房',
-    merchant: '商店房',
-  };
-  return {
-    room,
-    encounter: room.kind,
-    nature: room.nature,
-    danger: room.danger,
-    warning:
-      room.kind === 'boss'
-        ? 'BOSS 之战：建议全队满状态，胜后可从此处撤离'
-        : room.kind === 'elite'
-          ? '精英房：强度高于普通战斗，奖励也更厚'
-          : room.nature === 'physical'
-            ? '物理系房间：武者输出吃满克制，法师衰减'
-            : '魔法系房间：法师输出吃满克制，武者衰减',
-  };
+export function roomOf(state: RunState, roomId?: string): DemoRoom {
+  const id = roomId ?? state.currentRoomId;
+  return state.map.rooms.find((r) => r.id === id)!;
 }
 
-type RoomKind2 = DemoRoom['kind'];
-
-const LOOT_POOL: ReadonlyArray<{ nm: string; value: number }> = [
-  { nm: '铜钱串', value: 18 },
-  { nm: '碎玉璜', value: 26 },
-  { nm: '错金铜带钩', value: 34 },
-  { nm: '云纹漆盒', value: 42 },
-  { nm: '青铜爵', value: 55 },
-  { nm: '玉蝉', value: 62 },
-  { nm: '金错刀', value: 78 },
-  { nm: '殉葬珠串', value: 90 },
-  { nm: '将军印', value: 130 },
-];
-
-export interface CombatRequest {
-  readonly roomId: string;
-  readonly nature: 'physical' | 'ghost';
-  readonly danger: number;
-  readonly isBoss: boolean;
-}
-
-export function fightRoom(
+/** 当前房间可见的搜索点（战斗房/精英/宝藏/BOSS 有，起点/商店没有） */
+export function searchPointsOf(
   config: GameConfig,
   state: RunState,
-  picks: readonly number[],
-  request: CombatRequest,
-): { state: RunState; outcome: BattleOutcome } {
-  const seed = `${state.seed}:${request.roomId}`;
-  const outcome = runBattle(config, picks, state.equipped, request, seed, normalizeHealth(state.heroHealth));
-  const visited = new Set(state.visitedRooms);
-  visited.add(request.roomId);
+): readonly SearchPointView[] {
+  const room = roomOf(state);
+  if (room.kind === 'start' || room.kind === 'merchant') return [];
+  if (!state.visitedRooms.has(room.id)) return [];
+  const points = generateSearchPoints(
+    seedToNumber(`${state.seed}:${room.id}`),
+    room as Parameters<typeof generateSearchPoints>[1],
+    config.search,
+    config.combatItems,
+  );
+  return points.map((point) => {
+    const quality = config.search.qualities.find(
+      (q) => q.id === point.quality.id,
+    );
+    return {
+      id: point.id,
+      requiresKey: point.requiresKey,
+      qualityName: quality?.displayName ?? '普通',
+      qualityColor: quality?.color ?? '#d2d0c8',
+      searched: state.searchedPoints.has(point.id),
+    };
+  });
+}
 
-  const healthOut: Record<number, number> = { ...state.heroHealth };
-  for (const [heroId, hp] of Object.entries(outcome.heroHealthOut)) {
-    healthOut[Number(heroId)] = hp;
+export interface MoveResult {
+  readonly state: RunState;
+  readonly outcome?: BattleOutcome;
+  readonly terrorDamage?: Readonly<Record<number, number>>;
+}
+
+function partyHealth(state: RunState): PartyMemberHealth[] {
+  return state.picks.map((id) => ({
+    id: String(id),
+    health: state.heroHealth[id] === -1 ? 9999 : (state.heroHealth[id] ?? 0),
+    maxHealth: 9999,
+  }));
+}
+
+/** 移动到相邻房间：战斗房开战、其余直接进入；恐怖值在移动时结算 */
+export function moveTo(
+  config: GameConfig,
+  state: RunState,
+  roomId: string,
+): MoveResult {
+  const room = state.map.rooms.find((r) => r.id === roomId);
+  if (!room || !room.neighbors.includes(state.currentRoomId)) {
+    return { state };
   }
+  if (state.phase === 'looting') {
+    state = {
+      ...state,
+      phase: 'movement',
+      log: [...state.log, '离开房间，未完成的搜索已放弃。'],
+    };
+  }
+  if (state.phase !== 'movement') return { state };
 
-  if (!outcome.win) {
-    // 全灭：战利品遗失，军械保留，回起始房带 1 血
-    const revived: Record<number, number> = {};
-    for (const id of picks) revived[id] = 1;
+  // 恐怖值结算（domain previewTerrorMove）
+  const terrorConfig = config.terror;
+  const before = state.terror;
+  const party = partyHealth(state);
+  const preview = previewTerrorMove(before, party, terrorConfig);
+  const heroHealth: Record<number, number> = { ...state.heroHealth };
+  let terrorLog = '';
+  if (Object.keys(preview.damageByMember).length > 0) {
+    for (const [memberId, damage] of Object.entries(preview.damageByMember)) {
+      const heroId = Number(memberId);
+      const current = heroHealth[heroId] === -1 ? 9999 : heroHealth[heroId]!;
+      heroHealth[heroId] = Math.max(1, current - damage);
+    }
+    terrorLog = `恐怖侵蚀：全员损失部分生命（恐怖 ${before}→${preview.nextTerror}）。`;
+  }
+  const terror = preview.nextTerror;
+
+  // 战斗房
+  if (room.kind === 'combat' || room.kind === 'elite' || room.kind === 'boss') {
+    const battleSeed = `${state.seed}:${room.id}`;
+    const outcome = runBattle(
+      config,
+      state.picks,
+      state.equipped,
+      {
+        nature: room.nature,
+        danger: room.danger,
+        isBoss: room.kind === 'boss',
+      },
+      battleSeed,
+      normalizeHealth(heroHealth),
+    );
+    const visited = new Set(state.visitedRooms);
+    visited.add(room.id);
+    for (const [heroId, hp] of Object.entries(outcome.heroHealthOut)) {
+      heroHealth[Number(heroId)] = hp;
+    }
+
+    if (!outcome.win) {
+      const revived: Record<number, number> = {};
+      for (const id of state.picks) revived[id] = 1;
+      return {
+        state: {
+          ...state,
+          phase: 'movement',
+          visitedRooms: visited,
+          heroHealth: revived,
+          loot: [],
+          terror,
+          currentRoomId: state.map.rooms.find((r) => r.kind === 'start')!.id,
+          result: 'wiped',
+          log: [
+            ...state.log,
+            terrorLog,
+            `全队在【${room.displayName}】倒下！战利品遗失，军械保留，伤重撤回起点。`,
+          ].filter(Boolean),
+        },
+        outcome,
+      };
+    }
+
     return {
       state: {
         ...state,
-        phase: 'movement',
+        phase: 'looting',
         visitedRooms: visited,
-        heroHealth: revived,
-        loot: [],
-        currentRoomId: state.map.rooms.find((r) => r.kind === 'start')!.id,
-        result: 'wiped',
-        log: [...state.log, `全队在【${roomName(state, request.roomId)}】倒下！战利品遗失，军械保留，伤重撤回起点。`],
+        heroHealth,
+        terror,
+        currentRoomId: room.id,
+        log: [
+          ...state.log,
+          terrorLog,
+          `战斗胜利（${outcome.seconds.toFixed(1)}秒）：【${room.displayName}】已清理。`,
+        ].filter(Boolean),
       },
       outcome,
     };
   }
 
-  // 战斗胜利后进入搜刮阶段；lootedRooms 只在真正搜刮时标记
-  const looted = new Set(state.lootedRooms);
-
+  // 非战斗房
+  const visited = new Set(state.visitedRooms);
+  visited.add(room.id);
+  const isTreasure = room.kind === 'treasure';
   return {
     state: {
       ...state,
-      phase: 'looting',
+      phase: isTreasure ? 'looting' : 'movement',
       visitedRooms: visited,
-      lootedRooms: looted,
-      heroHealth: healthOut,
-      currentRoomId: request.roomId,
+      heroHealth,
+      terror,
+      currentRoomId: room.id,
       log: [
         ...state.log,
-        `战斗胜利（${outcome.seconds.toFixed(1)}秒）：【${roomName(state, request.roomId)}】已清理，可以搜刮。`,
-      ],
+        terrorLog,
+        isTreasure
+          ? `抵达【${room.displayName}】，可以搜刮。`
+          : `经过【${room.displayName}】。`,
+      ].filter(Boolean),
     },
-    outcome,
   };
 }
 
-export function searchRoom(
+/** 搜一个搜索点：奖励入包（战利品变现价值），上锁需铜钥匙 */
+export function searchPoint(
+  config: GameConfig,
   state: RunState,
-  roomId: string,
-): { state: RunState; gained: readonly LootEntry[] } {
-  if (state.lootedRooms.has(roomId) || state.phase !== 'looting') {
-    return { state, gained: [] };
-  }
-  const room = state.map.rooms.find((r) => r.id === roomId)!;
-  const count =
-    room.kind === 'boss' ? 4 : room.kind === 'elite' ? 3 : room.kind === 'treasure' ? 3 : 2;
-  let hash = 2166136261;
-  const key = `${state.seed}:${roomId}:loot`;
-  for (let i = 0; i < key.length; i += 1) {
-    hash ^= key.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  const gained: LootEntry[] = [];
-  for (let i = 0; i < count; i += 1) {
-    hash = Math.imul(hash ^ (i + 1), 16777619) >>> 0;
-    const pick = LOOT_POOL[hash % LOOT_POOL.length]!;
-    gained.push({
-      instanceId: `${roomId}:loot:${i}`,
-      nm: pick.nm,
-      value: Math.round(pick.value * (1 + (room.danger - 1) * 0.25)),
-    });
-  }
+  pointId: string,
+): { state: RunState; gained: readonly LootEntry[]; error?: string } {
+  const room = roomOf(state);
+  const points = generateSearchPoints(
+    seedToNumber(`${state.seed}:${room.id}`),
+    room as Parameters<typeof generateSearchPoints>[1],
+    config.search,
+    config.combatItems,
+  );
+  const point = points.find((p) => p.id === pointId);
+  if (!point) return { state, gained: [] };
+  if (state.searchedPoints.has(pointId))
+    return { state, gained: [], error: '已搜索过' };
+  if (point.requiresKey && state.keys <= 0)
+    return { state, gained: [], error: '需要铜钥匙' };
+
+  const searched = new Set(state.searchedPoints);
+  searched.add(pointId);
+  const gained: LootEntry[] = point.rewards.map((reward, index) => {
+    const r = reward as unknown as {
+      displayName: string;
+      value?: number;
+      artId?: string;
+      nature?: string;
+    };
+    const isCombatItem = r.nature != null;
+    return {
+      instanceId: `${pointId}:${index}`,
+      nm: r.displayName,
+      value: isCombatItem
+        ? Math.max(20, Math.round((r.value ?? 80) / 4))
+        : (r.value ?? 20),
+      artId: r.artId ?? 'valuable_copper_coin',
+      quality: point.quality.id,
+    };
+  });
+
+  const keys = point.requiresKey ? state.keys - 1 : state.keys;
+  const remaining = points.filter((p) => !searched.has(p.id)).length;
   return {
     state: {
       ...state,
-      phase: 'movement',
-      currentRoomId: roomId,
+      searchedPoints: searched,
+      keys,
       loot: [...state.loot, ...gained],
+      phase: remaining === 0 ? 'movement' : 'looting',
       log: [
         ...state.log,
-        `搜刮【${roomName(state, roomId)}】：${gained.map((g) => `${g.nm}(${g.value}文)`).join('、')}。`,
+        `搜索【${point.quality.displayName}】${point.requiresKey ? '（消耗铜钥匙）' : ''}：${gained.map((g) => `${g.nm}(${g.value}文)`).join('、')}${remaining === 0 ? '。本房已搜空' : ''}。`,
       ],
     },
     gained,
   };
 }
 
-/** 撤离：战利品按价值全额变现；军械保留；结算后 finished */
+/** 撤离：战利品变现 */
 export function extract(state: RunState): RunState {
   const coins = state.loot.reduce((sum, entry) => sum + entry.value, 0);
   return {
@@ -225,20 +328,23 @@ export function extract(state: RunState): RunState {
     phase: 'finished',
     coins,
     result: 'extracted',
-    log: [...state.log, `队伍安全撤离！战利品变现 ${coins} 文铜币，军械原样保留，可带入下一局。`],
+    log: [
+      ...state.log,
+      `队伍安全撤离！战利品变现 ${coins} 文铜币，军械原样保留。`,
+    ],
   };
 }
 
-export function normalizeHealth(heroHealth: Readonly<Record<number, number>>): Record<number, number> {
+export function lootValue(state: RunState): number {
+  return state.loot.reduce((sum, entry) => sum + entry.value, 0);
+}
+
+export function normalizeHealth(
+  heroHealth: Readonly<Record<number, number>>,
+): Record<number, number> {
   const out: Record<number, number> = {};
   for (const [key, value] of Object.entries(heroHealth)) {
     out[Number(key)] = value < 0 ? Number.MAX_SAFE_INTEGER : value;
   }
   return out;
 }
-
-function roomName(state: RunState, roomId: string): string {
-  return state.map.rooms.find((r) => r.id === roomId)?.displayName ?? roomId;
-}
-
-export type { RoomKey };

@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "id": "p1_shop_vendor_talk",
+  "image": "p1_shop_vendor_talk.png",
+  "frameWidth": 900,
+  "frameHeight": 1000,
+  "frameCount": 8,
+  "fps": 10,
+  "loop": true,
+  "pivot": {
+    "x": 0.5,
+    "y": 1.0
+  },
+  "events": [],
+  "frames": [
+    {
+      "name": "p1_shop_vendor_talk_00",
+      "durationMs": 100,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 900,
+        "h": 1000
+      }
+    },
+    {
+      "name": "p1_shop_vendor_talk_01",
+      "durationMs": 100,
+      "rect": {
+        "x": 900,
+        "y": 0,
+        "w": 900,
+        "h": 1000
+      }
+    },
+    {
+      "name": "p1_shop_vendor_talk_02",
+      "durationMs": 100,
+      "rect": {
+        "x": 1800,
+        "y": 0,
+        "w": 900,
+        "h": 1000
+      }
+    },
+    {
+      "name": "p1_shop_vendor_talk_03",
+      "durationMs": 100,
+      "rect": {
+        "x": 2700,
+        "y": 0,
+        "w": 900,
+        "h": 1000
+      }
+    },
+    {
+      "name": "p1_shop_vendor_talk_04",
+      "durationMs": 100,
+      "rect": {
+        "x": 0,
+        "y": 1000,
+        "w": 900,
+        "h": 1000
+      }
+    },
+    {
+      "name": "p1_shop_vendor_talk_05",
+      "durationMs": 100,
+      "rect": {
+        "x": 900,
+        "y": 1000,
+        "w": 900,
+        "h": 1000
+      }
+    },
+    {
+      "name": "p1_shop_vendor_talk_06",
+      "durationMs": 100,
+      "rect": {
+        "x": 1800,
+        "y": 1000,
+        "w": 900,
+        "h": 1000
+      }
+    },
+    {
+      "name": "p1_shop_vendor_talk_07",
+      "durationMs": 100,
+      "rect": {
+        "x": 2700,
+        "y": 1000,
+        "w": 900,
+        "h": 1000
+      }
+    }
+  ]
+}
