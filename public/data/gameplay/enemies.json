@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "enemies": [
+    {
+      "id": "walking_corpse",
+      "displayName": "行尸",
+      "artId": "enemy_walking_corpse",
+      "tier": "standard",
+      "maxHealth": 190,
+      "attack": 10,
+      "attackIntervalMs": 1300,
+      "baseThreat": 1,
+      "frontlineOrder": 0,
+      "spawnWeight": 5,
+      "nature": "physical"
+    },
+    {
+      "id": "paper_effigy",
+      "displayName": "纸扎人",
+      "artId": "enemy_paper_effigy",
+      "tier": "standard",
+      "maxHealth": 150,
+      "attack": 8,
+      "attackIntervalMs": 1000,
+      "baseThreat": 2,
+      "frontlineOrder": 2,
+      "spawnWeight": 4,
+      "nature": "ghost"
+    },
+    {
+      "id": "possessed_servant",
+      "displayName": "附身家丁",
+      "artId": "enemy_possessed_servant",
+      "tier": "standard",
+      "maxHealth": 175,
+      "attack": 9,
+      "attackIntervalMs": 850,
+      "baseThreat": 2.5,
+      "frontlineOrder": 1,
+      "spawnWeight": 3,
+      "nature": "ghost"
+    },
+    {
+      "id": "cultist_sorcerer",
+      "displayName": "邪教术士",
+      "artId": "enemy_cultist_sorcerer",
+      "tier": "standard",
+      "maxHealth": 160,
+      "attack": 11,
+      "attackIntervalMs": 1500,
+      "baseThreat": 4,
+      "frontlineOrder": 3,
+      "spawnWeight": 2,
+      "nature": "physical"
+    },
+    {
+      "id": "corpse_brute",
+      "displayName": "尸傀壮汉",
+      "artId": "enemy_corpse_brute",
+      "tier": "elite",
+      "maxHealth": 650,
+      "attack": 20,
+      "attackIntervalMs": 1600,
+      "baseThreat": 5,
+      "frontlineOrder": 0,
+      "spawnWeight": 1,
+      "nature": "physical"
+    },
+    {
+      "id": "tomb_general",
+      "displayName": "镇墓将军",
+      "artId": "enemy_tomb_general",
+      "tier": "boss",
+      "maxHealth": 5200,
+      "attack": 260,
+      "attackIntervalMs": 1800,
+      "baseThreat": 10,
+      "frontlineOrder": 0,
+      "spawnWeight": 1,
+      "nature": "physical"
+    },
+    {
+      "id": "ghost_brute",
+      "displayName": "缚灵鬼将",
+      "artId": "enemy_corpse_brute",
+      "tier": "elite",
+      "maxHealth": 650,
+      "attack": 20,
+      "attackIntervalMs": 1600,
+      "baseThreat": 5,
+      "frontlineOrder": 0,
+      "spawnWeight": 1,
+      "nature": "ghost"
+    },
+    {
+      "id": "ghost_general",
+      "displayName": "镇墓将军魂",
+      "artId": "enemy_tomb_general",
+      "tier": "boss",
+      "maxHealth": 5200,
+      "attack": 240,
+      "attackIntervalMs": 1800,
+      "baseThreat": 10,
+      "frontlineOrder": 0,
+      "spawnWeight": 1,
+      "nature": "ghost"
+    }
+  ]
+}

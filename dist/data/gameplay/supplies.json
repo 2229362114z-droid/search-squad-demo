@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "healing_medicine",
+      "displayName": "回血药",
+      "description": "非战斗时使用，提供120点全队治疗总量，优先分配给生命比例最低的队员；最多带入3个。",
+      "artId": "item_supply_healing_medicine",
+      "price": 80,
+      "width": 1,
+      "height": 1,
+      "maxStack": 3,
+      "effect": {
+        "type": "heal_team",
+        "amount": 120
+      },
+      "maxCarry": 3
+    },
+    {
+      "id": "soul_talisman",
+      "displayName": "招魂符",
+      "description": "非战斗时使用，使一名倒地队员以 25% 生命苏醒。最多带入2个。",
+      "artId": "item_supply_soul_talisman",
+      "price": 150,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "effect": {
+        "type": "revive_member",
+        "healthRatio": 0.25
+      },
+      "maxCarry": 2
+    },
+    {
+      "id": "calming_incense",
+      "displayName": "安神香",
+      "description": "非战斗时使用，降低全队 30 点恐怖。最多带入3个。",
+      "artId": "item_supply_calming_incense",
+      "price": 100,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "effect": {
+        "type": "reduce_terror",
+        "amount": 30
+      },
+      "maxCarry": 3
+    },
+    {
+      "id": "protection_talisman",
+      "displayName": "护身符",
+      "description": "下一场战斗全队伤害提高 20%，受到的伤害降低 20%。最多带入2个。",
+      "artId": "item_supply_protection_talisman",
+      "price": 120,
+      "width": 1,
+      "height": 1,
+      "maxStack": 2,
+      "effect": {
+        "type": "next_combat_boost",
+        "damageRatio": 0.2,
+        "reductionRatio": 0.2
+      },
+      "maxCarry": 2
+    },
+    {
+      "id": "copper_key",
+      "displayName": "铜钥匙",
+      "description": "开启一处上锁的宝箱，使用后消耗一把。最多带入3个。",
+      "artId": "item_supply_copper_key",
+      "price": 70,
+      "width": 1,
+      "height": 1,
+      "maxStack": 3,
+      "effect": {
+        "type": "unlock_chest",
+        "amount": 1
+      },
+      "maxCarry": 3
+    },
+    {
+      "id": "fortune_talisman",
+      "displayName": "转运符",
+      "description": "事件失败后使用，重投选中的1枚六面骰，其余两枚保留；最多带入3个。",
+      "artId": "valuable_broken_jade",
+      "price": 80,
+      "width": 1,
+      "height": 1,
+      "maxStack": 3,
+      "maxCarry": 3,
+      "effect": {
+        "type": "reroll_event_die"
+      }
+    },
+    {
+      "id": "yin_yang_talisman",
+      "displayName": "阴阳符",
+      "description": "下一场战斗中，异色遗物的基础增减伤按30%生效。特色效果始终生效。仅在商店房或补给事件获得。",
+      "artId": "valuable_cursed_relic",
+      "price": 200,
+      "width": 1,
+      "height": 1,
+      "maxStack": 2,
+      "maxCarry": 2,
+      "effect": {
+        "type": "next_combat_off_nature",
+        "featureRatio": 0.3
+      },
+      "availableInPreparation": false
+    }
+  ]
+}

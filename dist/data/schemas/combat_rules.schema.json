@@ -1,0 +1,258 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "fixedStepMs",
+    "maxCatchUpSteps",
+    "simulationTimeoutMs",
+    "maximumEnergy",
+    "minimumDamage",
+    "damageVarianceRatio",
+    "criticalChance",
+    "criticalMultiplier",
+    "dangerScaling",
+    "threatModifiers",
+    "encounterRules",
+    "nonBossProgression",
+    "difficultyScale"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "fixedStepMs": {
+      "type": "integer",
+      "minimum": 10,
+      "maximum": 1000
+    },
+    "maxCatchUpSteps": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 60
+    },
+    "simulationTimeoutMs": {
+      "type": "integer",
+      "minimum": 1000
+    },
+    "maximumEnergy": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "minimumDamage": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "damageVarianceRatio": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.5
+    },
+    "criticalChance": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "criticalMultiplier": {
+      "type": "number",
+      "minimum": 1
+    },
+    "dangerScaling": {
+      "$ref": "#/definitions/dangerScaling"
+    },
+    "threatModifiers": {
+      "$ref": "#/definitions/threatModifiers"
+    },
+    "encounterRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "combat",
+        "elite",
+        "boss"
+      ],
+      "properties": {
+        "combat": {
+          "$ref": "#/definitions/encounterRule"
+        },
+        "elite": {
+          "$ref": "#/definitions/encounterRule"
+        },
+        "boss": {
+          "$ref": "#/definitions/encounterRule"
+        }
+      }
+    },
+    "nonBossProgression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "combat",
+        "elite"
+      ],
+      "properties": {
+        "combat": {
+          "$ref": "#/definitions/nonBossProgression"
+        },
+        "elite": {
+          "$ref": "#/definitions/nonBossProgression"
+        }
+      }
+    },
+    "difficultyScale": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "combat",
+        "elite",
+        "boss"
+      ],
+      "properties": {
+        "combat": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 4
+        },
+        "elite": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 4
+        },
+        "boss": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 4
+        }
+      }
+    }
+  },
+  "definitions": {
+    "dangerScaling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimumDanger",
+        "maximumDanger",
+        "healthPerLevel",
+        "damagePerLevel"
+      ],
+      "properties": {
+        "minimumDanger": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximumDanger": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "healthPerLevel": {
+          "type": "number",
+          "minimum": 0
+        },
+        "damagePerLevel": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "threatModifiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "castingWarningBonus",
+        "eliteBonus",
+        "bossBonus"
+      ],
+      "properties": {
+        "castingWarningBonus": {
+          "type": "number",
+          "minimum": 0
+        },
+        "eliteBonus": {
+          "type": "number",
+          "minimum": 0
+        },
+        "bossBonus": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "encounterRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimumUnits",
+        "maximumUnits",
+        "healthMultiplier",
+        "damageMultiplier",
+        "requiredTier",
+        "allowedTiers"
+      ],
+      "properties": {
+        "minimumUnits": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "maximumUnits": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "healthMultiplier": {
+          "type": "number",
+          "minimum": 1
+        },
+        "damageMultiplier": {
+          "type": "number",
+          "minimum": 1
+        },
+        "requiredTier": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "elite",
+            "boss",
+            null
+          ]
+        },
+        "allowedTiers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "standard",
+              "elite",
+              "boss"
+            ]
+          }
+        }
+      }
+    },
+    "nonBossProgression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "farHealthRatio",
+        "farDamagePerSecondRatio"
+      ],
+      "properties": {
+        "farHealthRatio": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 0.8
+        },
+        "farDamagePerSecondRatio": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 0.8
+        }
+      }
+    }
+  }
+}

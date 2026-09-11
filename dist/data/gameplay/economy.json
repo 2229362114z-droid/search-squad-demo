@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "initialCoins": 500,
+  "failureSafetyThreshold": 100,
+  "failureSafetyGrant": 150,
+  "refreshDuringRunIsFailure": true,
+  "growth": {
+    "effectPerLevel": 0.02,
+    "upgradeCosts": [
+      2000,
+      2400,
+      2900,
+      3300,
+      3800,
+      4200,
+      4700,
+      5100,
+      5600,
+      6000
+    ],
+    "foresightUpgradeCosts": [
+      2000,
+      4000,
+      6000
+    ]
+  }
+}

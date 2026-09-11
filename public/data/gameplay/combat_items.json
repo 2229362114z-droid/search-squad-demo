@@ -1,0 +1,566 @@
+{
+  "schemaVersion": 1,
+  "dropChanceByRoomKind": {
+    "combat": 0.18,
+    "elite": 0.24,
+    "treasure": 0,
+    "boss": 0.28
+  },
+  "items": [
+    {
+      "id": "warding_talisman",
+      "displayName": "实·镇煞符",
+      "description": "全队普攻伤害+19%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_warding_talisman",
+      "qualityId": "fine",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "basic_damage",
+        "ratio": 0.19
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "heart_mirror",
+      "displayName": "幽·护心镜",
+      "description": "全队释放大招获得42点护盾，持续5秒（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_heart_mirror",
+      "qualityId": "fine",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "ultimate_shield",
+        "amount": 42,
+        "durationMs": 5000
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "army_whistle",
+      "displayName": "幽·旧军哨",
+      "description": "全队普攻与承伤回能+21%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_army_whistle",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "energy_gain",
+        "ratio": 0.21
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "black_dog_fang",
+      "displayName": "实·黑狗牙",
+      "description": "全队普攻吸血11%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_black_dog_fang",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "lifesteal",
+        "ratio": 0.11
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "bloody_magazine",
+      "displayName": "实·染血弹匣",
+      "description": "全队普攻速度+13%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_bloody_magazine",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "attack_speed",
+        "ratio": 0.13
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "general_token_fragment",
+      "displayName": "幽·将军令残片",
+      "description": "全队大招伤害+68%，苏绫大招眩晕+0.1秒（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_general_token",
+      "qualityId": "precious",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "ultimate_power",
+        "ratio": 0.68,
+        "stunBonusMs": 100
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "warding_talisman_ghost",
+      "displayName": "幽·镇煞符",
+      "description": "全队普攻伤害+19%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_warding_talisman",
+      "qualityId": "fine",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "basic_damage",
+        "ratio": 0.19
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "heart_mirror_physical",
+      "displayName": "实·护心镜",
+      "description": "全队释放大招获得42点护盾，持续5秒（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_heart_mirror",
+      "qualityId": "fine",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "ultimate_shield",
+        "amount": 42,
+        "durationMs": 5000
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "army_whistle_physical",
+      "displayName": "实·旧军哨",
+      "description": "全队普攻与承伤回能+21%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_army_whistle",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "energy_gain",
+        "ratio": 0.21
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "black_dog_fang_ghost",
+      "displayName": "幽·黑狗牙",
+      "description": "全队普攻吸血11%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_black_dog_fang",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "lifesteal",
+        "ratio": 0.11
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "bloody_magazine_ghost",
+      "displayName": "幽·染血弹匣",
+      "description": "全队普攻速度+13%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_bloody_magazine",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "attack_speed",
+        "ratio": 0.13
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "general_token_fragment_physical",
+      "displayName": "实·将军令残片",
+      "description": "全队大招伤害+68%，苏绫大招眩晕+0.1秒（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_general_token",
+      "qualityId": "precious",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "ultimate_power",
+        "ratio": 0.68,
+        "stunBonusMs": 100
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092
+    },
+    {
+      "id": "calibrated_sight",
+      "displayName": "实·校准准星",
+      "description": "沈砚普攻伤害+47%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_warding_talisman",
+      "qualityId": "fine",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "basic_damage",
+        "ratio": 0.47
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "shen_yan"
+    },
+    {
+      "id": "quick_holster",
+      "displayName": "实·快拔枪套",
+      "description": "沈砚普攻速度+42%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_bloody_magazine",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "attack_speed",
+        "ratio": 0.42
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "shen_yan"
+    },
+    {
+      "id": "guerrilla_magazine",
+      "displayName": "实·游击弹匣",
+      "description": "沈砚普攻与承伤回能+189%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_army_whistle",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "energy_gain",
+        "ratio": 1.89
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "shen_yan"
+    },
+    {
+      "id": "evil_breaker_round",
+      "displayName": "实·破邪弹头",
+      "description": "沈砚大招伤害+142%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_general_token",
+      "qualityId": "precious",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "ultimate_power",
+        "ratio": 1.42,
+        "stunBonusMs": 0
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "shen_yan"
+    },
+    {
+      "id": "tomb_blade_tassel",
+      "displayName": "实·镇墓刀穗",
+      "description": "洪武普攻伤害+152%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_warding_talisman",
+      "qualityId": "fine",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "basic_damage",
+        "ratio": 1.52
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "hong_wu"
+    },
+    {
+      "id": "iron_guard_bracer",
+      "displayName": "实·铁卫护腕",
+      "description": "洪武战斗承伤-19%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_heart_mirror",
+      "qualityId": "fine",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "damage_reduction",
+        "ratio": 0.19
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "hong_wu"
+    },
+    {
+      "id": "blood_blade_ring",
+      "displayName": "实·饮血刀环",
+      "description": "洪武普攻吸血37%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_black_dog_fang",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "lifesteal",
+        "ratio": 0.37
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "hong_wu"
+    },
+    {
+      "id": "unyielding_badge",
+      "displayName": "实·不退腰牌",
+      "description": "洪武释放大招获得116点护盾，持续5秒（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_heart_mirror",
+      "qualityId": "fine",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "ultimate_shield",
+        "amount": 116,
+        "durationMs": 5000
+      },
+      "nature": "physical",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "hong_wu"
+    },
+    {
+      "id": "thunder_brush",
+      "displayName": "幽·雷纹朱笔",
+      "description": "玄真普攻伤害+105%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_warding_talisman",
+      "qualityId": "fine",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "basic_damage",
+        "ratio": 1.05
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "xuan_zhen"
+    },
+    {
+      "id": "spirit_bell",
+      "displayName": "幽·聚灵法铃",
+      "description": "玄真普攻与承伤回能+47%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_army_whistle",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "energy_gain",
+        "ratio": 0.47
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "xuan_zhen"
+    },
+    {
+      "id": "altar_jade_seal",
+      "displayName": "幽·护坛玉印",
+      "description": "玄真大招给予全队的护盾量+84%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_heart_mirror",
+      "qualityId": "fine",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "shield_power",
+        "ratio": 0.84
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "xuan_zhen"
+    },
+    {
+      "id": "swift_talisman_case",
+      "displayName": "幽·疾书符匣",
+      "description": "玄真普攻速度+42%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_bloody_magazine",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "attack_speed",
+        "ratio": 0.42
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "xuan_zhen"
+    },
+    {
+      "id": "soul_shot",
+      "displayName": "幽·镇魂霰弹",
+      "description": "苏绫普攻伤害+84%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_warding_talisman",
+      "qualityId": "fine",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "basic_damage",
+        "ratio": 0.84
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "su_ling"
+    },
+    {
+      "id": "binding_gun_ring",
+      "displayName": "幽·拘魂枪箍",
+      "description": "苏绫大招伤害+189%，苏绫大招眩晕+0.2秒（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_general_token",
+      "qualityId": "precious",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "ultimate_power",
+        "ratio": 1.89,
+        "stunBonusMs": 200
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "su_ling"
+    },
+    {
+      "id": "echo_bandolier",
+      "displayName": "幽·回响弹带",
+      "description": "苏绫普攻与承伤回能+189%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_army_whistle",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "energy_gain",
+        "ratio": 1.89
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "su_ling"
+    },
+    {
+      "id": "light_action_spring",
+      "displayName": "幽·轻机簧",
+      "description": "苏绫普攻速度+53%（所有房间生效）\n同色基础：全队伤害+9%，承伤-9.2%\n局内生效，结算后消失",
+      "artId": "combat_item_bloody_magazine",
+      "qualityId": "rare",
+      "value": 0,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1,
+      "dropWeight": 1,
+      "effect": {
+        "type": "attack_speed",
+        "ratio": 0.53
+      },
+      "nature": "ghost",
+      "baseDamageRatio": 0.09,
+      "baseReductionRatio": 0.092,
+      "targetCharacterId": "su_ling"
+    }
+  ]
+}

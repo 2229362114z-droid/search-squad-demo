@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "configVersion": "0.13.0",
+  "modules": [
+    {
+      "id": "events",
+      "path": "gameplay/events.json",
+      "schema": "schemas/events.schema.json"
+    },
+    {
+      "id": "session",
+      "path": "gameplay/session.json",
+      "schema": "schemas/session.schema.json"
+    },
+    {
+      "id": "inventory",
+      "path": "gameplay/inventory.json",
+      "schema": "schemas/inventory.schema.json"
+    },
+    {
+      "id": "terror",
+      "path": "gameplay/terror.json",
+      "schema": "schemas/terror.schema.json"
+    },
+    {
+      "id": "supplies",
+      "path": "gameplay/supplies.json",
+      "schema": "schemas/supplies.schema.json"
+    },
+    {
+      "id": "combat_items",
+      "path": "gameplay/combat_items.json",
+      "schema": "schemas/combat_items.schema.json"
+    },
+    {
+      "id": "characters",
+      "path": "gameplay/characters.json",
+      "schema": "schemas/characters.schema.json"
+    },
+    {
+      "id": "economy",
+      "path": "gameplay/economy.json",
+      "schema": "schemas/economy.schema.json"
+    },
+    {
+      "id": "search",
+      "path": "gameplay/search.json",
+      "schema": "schemas/search.schema.json"
+    },
+    {
+      "id": "combat_rules",
+      "path": "gameplay/combat_rules.json",
+      "schema": "schemas/combat_rules.schema.json"
+    },
+    {
+      "id": "enemies",
+      "path": "gameplay/enemies.json",
+      "schema": "schemas/enemies.schema.json"
+    },
+    {
+      "id": "prototype_run",
+      "path": "gameplay/prototype_run.json",
+      "schema": "schemas/prototype_run.schema.json"
+    }
+  ]
+}

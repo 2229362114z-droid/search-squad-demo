@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "width", "height", "allowRotation", "autoPlacementOrder"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "width": { "type": "integer", "minimum": 1 },
+    "height": { "type": "integer", "minimum": 1 },
+    "allowRotation": { "const": false },
+    "autoPlacementOrder": { "const": "row_major" }
+  }
+}

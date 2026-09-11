@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "autoSearcherCount": 3,
+  "minimumApproachDurationMs": 250,
+  "targetAverageRewardsPerPoint": 2,
+  "rewardCountWeights": [
+    {
+      "count": 1,
+      "weight": 1
+    },
+    {
+      "count": 2,
+      "weight": 2
+    },
+    {
+      "count": 3,
+      "weight": 1
+    }
+  ],
+  "qualities": [
+    {
+      "id": "common",
+      "displayName": "普通",
+      "durationMs": 2000,
+      "color": "#d2d0c8"
+    },
+    {
+      "id": "fine",
+      "displayName": "精良",
+      "durationMs": 3000,
+      "color": "#63a96b"
+    },
+    {
+      "id": "rare",
+      "displayName": "稀有",
+      "durationMs": 4000,
+      "color": "#6295c7"
+    },
+    {
+      "id": "precious",
+      "displayName": "珍奇",
+      "durationMs": 5000,
+      "color": "#b9924f"
+    }
+  ],
+  "rewards": [
+    {
+      "id": "old_copper_coin",
+      "displayName": "旧朝铜钱",
+      "description": "墓道角落散落的旧钱，锈迹虽重，仍有收藏价值。",
+      "artId": "valuable_old_copper_coin",
+      "qualityId": "common",
+      "value": 20,
+      "width": 1,
+      "height": 1,
+      "maxStack": 5
+    },
+    {
+      "id": "burial_ceramic",
+      "displayName": "陪葬陶片",
+      "description": "带有残缺祭纹的陪葬器碎片，可带回镇邪司换取报酬。",
+      "artId": "valuable_burial_ceramic",
+      "qualityId": "common",
+      "value": 25,
+      "width": 1,
+      "height": 1,
+      "maxStack": 5
+    },
+    {
+      "id": "ancient_coin_string",
+      "displayName": "古钱串",
+      "description": "以褪色红绳串起的旧钱，铜锈下仍能辨出前朝年号。",
+      "artId": "valuable_ancient_coin_string",
+      "qualityId": "fine",
+      "value": 45,
+      "width": 1,
+      "height": 1,
+      "maxStack": 3
+    },
+    {
+      "id": "cracked_jade_ornament",
+      "displayName": "残破玉珏",
+      "description": "断口泛着暗红的陪葬玉珏，仍保留细密的云雷纹。",
+      "artId": "valuable_cracked_jade_ornament",
+      "qualityId": "fine",
+      "value": 60,
+      "width": 1,
+      "height": 1,
+      "maxStack": 3
+    },
+    {
+      "id": "ink_rubbing",
+      "displayName": "残碑拓片",
+      "description": "记有将军冢旧事的残缺拓片，字迹间隐约透着阴气。",
+      "artId": "valuable_ink_rubbing",
+      "qualityId": "rare",
+      "value": 300,
+      "width": 1,
+      "height": 1,
+      "maxStack": 2
+    },
+    {
+      "id": "silver_funeral_pin",
+      "displayName": "错银丧钉",
+      "description": "封棺时使用的错银长钉，工艺精细且来历不祥。",
+      "artId": "valuable_silver_funeral_pin",
+      "qualityId": "rare",
+      "value": 360,
+      "width": 1,
+      "height": 1,
+      "maxStack": 2
+    },
+    {
+      "id": "general_seal_fragment",
+      "displayName": "将军印残角",
+      "description": "疑似将军私印的一角，残留着强烈的煞气。",
+      "artId": "valuable_general_seal_fragment",
+      "qualityId": "precious",
+      "value": 1400,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1
+    },
+    {
+      "id": "jade_cicada",
+      "displayName": "沁血玉蝉",
+      "description": "置于亡者口中的玉蝉，血色已经渗入玉髓。",
+      "artId": "valuable_jade_cicada",
+      "qualityId": "precious",
+      "value": 1800,
+      "width": 1,
+      "height": 1,
+      "maxStack": 1
+    }
+  ],
+  "roomRules": {
+    "combat": {
+      "minimumPoints": 2,
+      "maximumPoints": 3,
+      "minimumLockedPoints": 0,
+      "lockedRoomChance": 0.04,
+      "qualityWeights": [
+        {
+          "qualityId": "common",
+          "weight": 60
+        },
+        {
+          "qualityId": "fine",
+          "weight": 25
+        },
+        {
+          "qualityId": "rare",
+          "weight": 12
+        },
+        {
+          "qualityId": "precious",
+          "weight": 3
+        }
+      ]
+    },
+    "elite": {
+      "minimumPoints": 3,
+      "maximumPoints": 4,
+      "minimumLockedPoints": 0,
+      "lockedRoomChance": 0.1,
+      "qualityWeights": [
+        {
+          "qualityId": "common",
+          "weight": 25
+        },
+        {
+          "qualityId": "fine",
+          "weight": 35
+        },
+        {
+          "qualityId": "rare",
+          "weight": 28
+        },
+        {
+          "qualityId": "precious",
+          "weight": 12
+        }
+      ]
+    },
+    "treasure": {
+      "minimumPoints": 3,
+      "maximumPoints": 3,
+      "minimumLockedPoints": 0,
+      "lockedRoomChance": 0.1,
+      "qualityWeights": [
+        {
+          "qualityId": "common",
+          "weight": 28
+        },
+        {
+          "qualityId": "fine",
+          "weight": 34
+        },
+        {
+          "qualityId": "rare",
+          "weight": 28
+        },
+        {
+          "qualityId": "precious",
+          "weight": 10
+        }
+      ]
+    },
+    "boss": {
+      "minimumPoints": 4,
+      "maximumPoints": 4,
+      "minimumLockedPoints": 0,
+      "lockedRoomChance": 0,
+      "qualityWeights": [
+        {
+          "qualityId": "rare",
+          "weight": 45
+        },
+        {
+          "qualityId": "precious",
+          "weight": 55
+        }
+      ]
+    }
+  }
+}
