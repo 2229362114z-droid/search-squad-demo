@@ -59,6 +59,8 @@ export interface BattleOutcome {
     role: string;
   }>;
   readonly enemyHp: ReadonlyArray<{ nm: string; hp: number; maxHp: number }>;
+  /** 英雄战后存活血量（按 heroId），用于跨房间携带 */
+  readonly heroHealthOut: Readonly<Record<number, number>>;
 }
 
 export type Role = 'tank' | 'dps';
@@ -171,51 +173,34 @@ export function heroCombatInput(
   };
 }
 
+export interface RoomSpec {
+  readonly nature: 'physical' | 'ghost';
+  readonly danger: number;
+  readonly isBoss: boolean;
+}
+
 export function buildRoomEnemies(
   seed: string,
-  room: RoomKey,
+  spec: RoomSpec,
   config: GameConfig,
 ): readonly CombatantInput[] {
   const rules = config.combatRules as CombatRulesConfig;
   const enemiesConfig = config.enemies as EnemiesConfig;
-  if (room === 'boss') {
-    // 单将军试炼：nature 由种子决定（红/蓝各半），数值按试玩版折减
-    const nature =
-      seedToNature(seed) === 0 ? ('physical' as const) : ('ghost' as const);
-    const encounter = generateEncounter(
-      seed,
-      'boss',
-      BOSS_DANGER,
-      rules,
-      enemiesConfig,
-      nature,
-    );
-    return encounter.enemies.map((enemy) => ({
-      ...enemy,
-      maxHealth: Math.max(1, Math.round(enemy.maxHealth * BOSS_HEALTH_FACTOR)),
-      health: Math.max(1, Math.round(enemy.maxHealth * BOSS_HEALTH_FACTOR)),
-      attack: Math.max(1, Math.round(enemy.attack * BOSS_ATTACK_FACTOR)),
-    }));
-  }
-  const nature = room === 'phys' ? 'physical' : 'ghost';
   const encounter = generateEncounter(
     seed,
-    'combat',
-    DEMO_COMBAT_DANGER,
+    spec.isBoss ? 'boss' : 'combat',
+    spec.danger,
     rules,
     enemiesConfig,
-    nature,
+    spec.nature,
   );
-  return encounter.enemies;
-}
-
-function seedToNature(seed: string): number {
-  let hash = 2166136261;
-  for (let i = 0; i < seed.length; i += 1) {
-    hash ^= seed.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  return (hash >>> 0) % 2;
+  if (!spec.isBoss) return encounter.enemies;
+  return encounter.enemies.map((enemy) => ({
+    ...enemy,
+    maxHealth: Math.max(1, Math.round(enemy.maxHealth * BOSS_HEALTH_FACTOR)),
+    health: Math.max(1, Math.round(enemy.maxHealth * BOSS_HEALTH_FACTOR)),
+    attack: Math.max(1, Math.round(enemy.attack * BOSS_ATTACK_FACTOR)),
+  }));
 }
 
 function eventLine(event: CombatEvent): BattleLine | null {
@@ -242,16 +227,25 @@ function heroName(instanceId: string): string {
   return nameById.get(instanceId) ?? instanceId;
 }
 
+/** 按房间属性开战：nature 决定克制，danger 决定敌人强度，boss 房有专属预算折减 */
 export function runBattle(
   config: GameConfig,
   picks: readonly number[],
   equipped: Readonly<Record<number, number>>,
-  room: RoomKey,
+  room: RoomKey | { nature: 'physical' | 'ghost'; danger: number; isBoss: boolean },
   seed: string = `demo:${Date.now()}`,
+  heroHealth?: Readonly<Record<number, number>>,
 ): BattleOutcome {
   const rules = config.combatRules as CombatRulesConfig;
-  const roomNature: 'physical' | 'ghost' =
-    room === 'magic' ? 'ghost' : 'physical';
+  const spec: RoomSpec =
+    typeof room === 'string'
+      ? {
+          nature: room === 'magic' ? 'ghost' : 'physical',
+          danger: room === 'boss' ? BOSS_DANGER : DEMO_COMBAT_DANGER,
+          isBoss: room === 'boss',
+        }
+      : room;
+  const roomNature = spec.nature;
 
   nameById.clear();
   const heroes: HeroCombatantInput[] = [];
@@ -261,11 +255,15 @@ export function runBattle(
     const items = itemsForHero(heroId, equipped);
     const role: Role = index === 0 ? 'tank' : 'dps';
     const input = heroCombatInput(hero, items, role, roomNature, index);
+    if (heroHealth?.[heroId] != null) {
+      const carried = Math.max(0, heroHealth[heroId]!);
+      (input as { health?: number }).health = Math.min(input.maxHealth, carried);
+    }
     nameById.set(input.instanceId, hero.nm);
     heroes.push(input);
   });
 
-  const enemies = buildRoomEnemies(seed, room, config) as CombatantInput[];
+  const enemies = buildRoomEnemies(seed, spec, config) as CombatantInput[];
   for (const enemy of enemies) {
     nameById.set(enemy.instanceId, enemy.displayName);
   }
@@ -323,7 +321,16 @@ export function runBattle(
         hp: unit.health,
         maxHp: unit.maxHealth,
       })),
+    heroHealthOut: Object.fromEntries(
+      picks
+        .filter((heroId) => heroById(heroId) != null)
+        .map((heroId) => [heroId, Math.max(0, Math.round(heroHealthOf(state, `hero:${heroId}`)))]),
+    ),
   };
+}
+
+function heroHealthOf(state: { units: ReadonlyArray<{ instanceId: string; health: number }> }, instanceId: string): number {
+  return state.units.find((unit) => unit.instanceId === instanceId)?.health ?? 0;
 }
 
 function heroById(id: number): HeroDef | undefined {
