@@ -1,0 +1,102 @@
+{
+  "_dungeon-layout-QWIGcUoy.js": {
+    "file": "_next/static/chunks/dungeon-layout-QWIGcUoy.js",
+    "name": "dungeon-layout"
+  },
+  "_framework-DoHeAR4W.js": {
+    "file": "_next/static/chunks/framework-DoHeAR4W.js",
+    "name": "framework",
+    "imports": [
+      "_rolldown-runtime-R9bKdBD2.js"
+    ]
+  },
+  "_rolldown-runtime-R9bKdBD2.js": {
+    "file": "_next/static/chunks/rolldown-runtime-R9bKdBD2.js",
+    "name": "rolldown-runtime"
+  },
+  "node_modules/phaser/dist/phaser.esm.js": {
+    "file": "_next/static/chunks/phaser.esm-DzBYzHG-.js",
+    "name": "phaser.esm",
+    "src": "node_modules/phaser/dist/phaser.esm.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/vinext/dist/shims/internal/app-route-prefetch-policy.js": {
+    "file": "_next/static/chunks/app-route-prefetch-policy-DUjOJ0Bg.js",
+    "name": "app-route-prefetch-policy",
+    "src": "node_modules/vinext/dist/shims/internal/app-route-prefetch-policy.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "virtual:vinext-app-browser-entry"
+    ]
+  },
+  "node_modules/vinext/dist/shims/layout-segment-context.js": {
+    "file": "_next/static/chunks/layout-segment-context-Cz1SISd8.js",
+    "name": "layout-segment-context",
+    "src": "node_modules/vinext/dist/shims/layout-segment-context.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-R9bKdBD2.js",
+      "virtual:vinext-app-browser-entry",
+      "_framework-DoHeAR4W.js"
+    ]
+  },
+  "node_modules/vinext/dist/shims/streamed-icons.js": {
+    "file": "_next/static/chunks/streamed-icons-y4By0QGo.js",
+    "name": "streamed-icons",
+    "src": "node_modules/vinext/dist/shims/streamed-icons.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-R9bKdBD2.js",
+      "_framework-DoHeAR4W.js"
+    ]
+  },
+  "src/render/phaser/create-dungeon-game.ts": {
+    "file": "_next/static/chunks/create-dungeon-game-C1o5B3t0.js",
+    "name": "create-dungeon-game",
+    "src": "src/render/phaser/create-dungeon-game.ts",
+    "isDynamicEntry": true,
+    "imports": [
+      "virtual:vinext-app-browser-entry",
+      "_dungeon-layout-QWIGcUoy.js"
+    ],
+    "dynamicImports": [
+      "node_modules/phaser/dist/phaser.esm.js"
+    ]
+  },
+  "src/ui/react/game-app.tsx": {
+    "file": "_next/static/chunks/game-app-p_3lLNNC.js",
+    "name": "game-app",
+    "src": "src/ui/react/game-app.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-R9bKdBD2.js",
+      "virtual:vinext-app-browser-entry",
+      "_framework-DoHeAR4W.js",
+      "_dungeon-layout-QWIGcUoy.js"
+    ],
+    "dynamicImports": [
+      "src/render/phaser/create-dungeon-game.ts",
+      "node_modules/phaser/dist/phaser.esm.js"
+    ],
+    "css": [
+      "_next/static/css/game-app.H5J7r0-l.css"
+    ]
+  },
+  "virtual:vinext-app-browser-entry": {
+    "file": "_next/static/chunks/index-B5pEo4L6.js",
+    "name": "index",
+    "src": "virtual:vinext-app-browser-entry",
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-R9bKdBD2.js",
+      "_framework-DoHeAR4W.js"
+    ],
+    "dynamicImports": [
+      "node_modules/vinext/dist/shims/internal/app-route-prefetch-policy.js",
+      "virtual:vinext-app-browser-entry",
+      "node_modules/vinext/dist/shims/layout-segment-context.js",
+      "src/ui/react/game-app.tsx",
+      "node_modules/vinext/dist/shims/streamed-icons.js"
+    ]
+  }
+}

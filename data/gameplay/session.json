@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "baselineWidth": 1920,
+  "baselineHeight": 1080,
+  "sceneHeight": 704,
+  "extractionDurationMs": 3000,
+  "prototypeCombatDurationMs": 4000,
+  "backgroundClockPaused": true
+}

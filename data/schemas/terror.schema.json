@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "maximum", "movementGain", "fullDamageRatio", "calmingIncenseReduction", "bypassCombatMitigation"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "maximum": { "type": "number", "exclusiveMinimum": 0 },
+    "movementGain": { "type": "number", "minimum": 0 },
+    "fullDamageRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "calmingIncenseReduction": { "type": "number", "minimum": 0 },
+    "bypassCombatMitigation": { "const": true }
+  }
+}

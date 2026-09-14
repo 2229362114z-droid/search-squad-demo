@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "maximum": 100,
+  "movementGain": 10,
+  "fullDamageRatio": 0.12,
+  "calmingIncenseReduction": 30,
+  "bypassCombatMitigation": true
+}
