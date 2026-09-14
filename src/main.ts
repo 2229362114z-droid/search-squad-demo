@@ -9,7 +9,7 @@ import {
   type HeroDef,
   type RoomKey,
 } from '@/src/game/data';
-import { startExplore } from '@/src/ui/explore';
+/* 公网版本体：iframe 直接嵌入，1:1 零改动 */
 
 /* ============ 状态 ============ */
 let picks: number[] = [];
@@ -362,24 +362,89 @@ function showBattle(
   if (battleEl) battleEl.style.display = 'block';
 }
 
-/* ============ 探索入口（实现在 ui/explore.ts，公网版美术） ============ */
+/* ============ 公网版本体入口（iframe 1:1 嵌入） ============ */
+const PUBLIC_GAME_URL = 'https://smc002.github.io/';
+/** 本地版 = 同主机的 4173 端口（局域网访问时自动指向服务器机器） */
+function localGameUrl(): string {
+  return `${window.location.protocol}//${window.location.hostname}:4173/`;
+}
+/** 探测本地版是否可达，不可达则回退公网版 */
+async function resolveGameUrl(): Promise<{ url: string; local: boolean }> {
+  const local = localGameUrl();
+  try {
+    await fetch(local, { mode: 'no-cors', signal: AbortSignal.timeout(1500) });
+    return { url: local, local: true };
+  } catch {
+    return { url: PUBLIC_GAME_URL, local: false };
+  }
+}
+
+function mountGameHost(): void {
+  const root = document.getElementById('exploreRoot');
+  if (!root) return;
+  root.innerHTML = `
+  <div style="position:fixed;inset:0;background:#0b0906;z-index:40;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 14px;background:#15120f;border-bottom:1px solid #3d332a;flex:none">
+      <b style="color:#d4a94e;font-size:14px">封门将军冢 · 公网版玩法（1:1）</b>
+      <span id="ghMode" style="color:#5c5245;font-size:11px">检测中…</span>
+      <button id="ghSwitch" style="background:#2a231c;border:1px solid #3d332a;color:#9b8c74;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px">切换来源</button>
+      <button id="ghNewTab" style="background:#2a231c;border:1px solid #3d332a;color:#9b8c74;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px">新窗口打开</button>
+      <div style="flex:1"></div>
+      <span style="color:#5c5245;font-size:11px">存档保存在游戏自己的浏览器存储中</span>
+      <button id="ghBack" style="background:#2a231c;border:1px solid #8a6a2a;color:#d4a94e;padding:4px 14px;border-radius:6px;cursor:pointer;font-size:12px">← 返回配装</button>
+    </div>
+    <iframe id="ghFrame" src="${PUBLIC_GAME_URL}" style="flex:1;width:100%;border:0;background:#080d0c" allow="fullscreen"></iframe>
+  </div>`;
+  root.style.display = 'block';
+  let usingLocal = false;
+  const frame = () => document.getElementById('ghFrame') as HTMLIFrameElement;
+  const modeEl = () => document.getElementById('ghMode')!;
+  void resolveGameUrl().then(({ url, local }) => {
+    usingLocal = local;
+    frame().src = url;
+    modeEl().textContent = local ? '本地开发版（4173）' : '线上公网版';
+  });
+  document.getElementById('ghSwitch')!.onclick = async () => {
+    modeEl().textContent = '检测中…';
+    const { url, local } = await resolveGameUrl();
+    const targetLocal = !local ? localGameUrl() : PUBLIC_GAME_URL;
+    if (local) {
+      // 当前本地可达 → 切公网
+      usingLocal = false;
+      frame().src = PUBLIC_GAME_URL;
+      modeEl().textContent = '线上公网版';
+    } else if (targetLocal === localGameUrl()) {
+      // 公网不可达时再试本地
+      try {
+        await fetch(targetLocal, { mode: 'no-cors', signal: AbortSignal.timeout(1500) });
+        usingLocal = true;
+        frame().src = targetLocal;
+        modeEl().textContent = '本地开发版（4173）';
+        return;
+      } catch {
+        /* 都不可达，保持公网 */
+      }
+      modeEl().textContent = '线上公网版（本地版未启动）';
+    }
+  };
+  document.getElementById('ghNewTab')!.onclick = () => {
+    const frame = document.getElementById('ghFrame') as HTMLIFrameElement;
+    window.open(frame.src, '_blank');
+  };
+  document.getElementById('ghBack')!.onclick = () => {
+    root.style.display = 'none';
+    root.innerHTML = '';
+    const setup = document.getElementById('setupView');
+    if (setup) setup.style.display = 'block';
+    renderAll();
+  };
+}
+
 window.__startRun = (): void => {
-  if (picks.length < 3 || !config) return;
+  if (picks.length < 3) return;
   const setup = $('setupView');
-  const exploreRoot = $('exploreRoot');
   if (setup) setup.style.display = 'none';
-  if (exploreRoot) exploreRoot.style.display = 'block';
-  startExplore(
-    config,
-    `run-${Date.now()}`,
-    { ...equipped },
-    picks,
-    () => {
-      const explore = $('exploreRoot');
-      if (explore) explore.style.display = 'none';
-      renderAll();
-    },
-  );
+  mountGameHost();
 };
 
 /* ============ 启动 ============ */
@@ -436,7 +501,7 @@ function mountAppShell(): void {
       </div>
       <div class="hint" id="roomInfo"></div>
       <button class="btn-main" id="goBattle" disabled>阵容未成型</button>
-      <button class="btn-main" id="startRun" style="margin-top:8px;background:linear-gradient(135deg,#4a6a3a,#7a9a5a)" onclick="window.__startRun()">带此阵容进入墓道 →</button>
+      <button class="btn-main" id="startRun" style="margin-top:8px;background:linear-gradient(135deg,#4a6a3a,#7a9a5a)" onclick="window.__startRun()">进入公网版玩法（封门将军冢）→</button>
     </div>
   </div>
 </div>
